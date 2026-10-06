@@ -2,8 +2,8 @@
 //  UBWindow.m
 //  Übersicht
 //
-//  A window that sits on desktop level, is always fullscreen and doesn't show
-//  up in Mission Control
+//  A borderless widget window spanning a display. On macOS 27 and later,
+//  hide during Mission Control to keep widgets out of Spaces previews.
 //
 //  Created by Felix Hageloh on 20/9/13.
 //  Copyright (c) 2013 Felix Hageloh.
@@ -35,8 +35,13 @@
         type = windowType;
         [self setBackgroundColor:[NSColor clearColor]];
         [self setOpaque:NO];
+        NSWindowCollectionBehavior missionControlBehavior =
+            NSWindowCollectionBehaviorStationary;
+        if (@available(macOS 27.0, *)) {
+            missionControlBehavior = NSWindowCollectionBehaviorTransient;
+        }
         [self setCollectionBehavior:(
-            NSWindowCollectionBehaviorStationary |
+            missionControlBehavior |
             NSWindowCollectionBehaviorCanJoinAllSpaces |
             NSWindowCollectionBehaviorIgnoresCycle
         )];
